@@ -1,0 +1,33 @@
+/* Ensure no horizontal scrollbar */
+body {
+    overflow-x: hidden;
+}
+
+/* Adjust logo size */
+.navbar-brand img {
+    max-width: 100%;
+    height: auto;
+    max-height: 70px;
+    /* Limit height */
+}
+
+@font-face {
+    font-family: "OlympicHeadline-Regular";
+    src: url("fonts/OlympicHeadline-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "OlympicSans";
+    src: url("fonts/OlympicSans.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "OlympicSans-Bold";
+    src: url("fonts/OlympicSans-Bold.ttf") format("truetype");
+}
+
+.rectangle {
+    width: 1606px;
+    height: 992.15px;
+    color: black;
+}
