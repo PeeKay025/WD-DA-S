@@ -1,14 +1,11 @@
-/* Ensure no horizontal scrollbar */
 body {
     overflow-x: hidden;
 }
 
-/* Adjust logo size */
 .navbar-brand img {
     max-width: 100%;
     height: auto;
     max-height: 70px;
-    /* Limit height */
 }
 
 @font-face {
@@ -26,17 +23,16 @@ body {
     src: url("fonts/OlympicSans-Bold.ttf") format("truetype");
 }
 
-.Medals{
-        width: 1606px;
-        height: 992.15px;
-        background: black;
-        position: relative;
-        border-radius: 80px;
-
+.Medals {
+    background: black;
+    position: relative;
+    border-radius: 80px;
+    padding: 20px;
+    min-height: 500px;
 }
 
 .custom-box {
-    background: white;
+    background-color: #f8f9fa;
     width: 1200px;
     height: 96.82px;
     border-radius: 30px;

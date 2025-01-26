@@ -1,24 +1,29 @@
 <?php
 include '../connect.php';
 
-// Handle form submission for adding a new country
 if (isset($_POST['addCountry'])) {
     $countryName = $_POST['countryName'];
     $totalGold = $_POST['totalGold'];
     $totalSilver = $_POST['totalSilver'];
     $totalBronze = $_POST['totalBronze'];
+    
+    $image = $_FILES['countryImage']['name'];
+    $target = "../images/" . basename($image);
+    
+    if (move_uploaded_file($_FILES['countryImage']['tmp_name'], $target)) {
+        $query = "INSERT INTO countries (countryName, totalGold, totalSilver, totalBronze, countryImage) 
+                  VALUES ('$countryName', '$totalGold', '$totalSilver', '$totalBronze', '$image')";
 
-    $query = "INSERT INTO countries (countryName, totalGold, totalSilver, totalBronze) 
-              VALUES ('$countryName', '$totalGold', '$totalSilver', '$totalBronze')";
-
-    if (executeQuery($query)) {
-        echo "<div class='alert alert-success'>New country added successfully!</div>";
+        if (executeQuery($query)) {
+            echo "<div class='alert alert-success'>New country added successfully!</div>";
+        } else {
+            echo "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";
+        }
     } else {
-        echo "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";
+        echo "<div class='alert alert-danger'>Failed to upload image.</div>";
     }
 }
 
-// Handle form submission for updating an existing country
 if (isset($_POST['updateCountry'])) {
     $id = $_POST['id'];
     $countryName = $_POST['countryName'];
@@ -26,7 +31,18 @@ if (isset($_POST['updateCountry'])) {
     $totalSilver = $_POST['totalSilver'];
     $totalBronze = $_POST['totalBronze'];
 
-    $query = "UPDATE countries SET countryName='$countryName', totalGold='$totalGold', totalSilver='$totalSilver', totalBronze='$totalBronze' WHERE id=$id";
+    if ($_FILES['countryImage']['name'] != "") {
+        $image = $_FILES['countryImage']['name'];
+        $target = "../images/" . basename($image);
+
+        if (move_uploaded_file($_FILES['countryImage']['tmp_name'], $target)) {
+            $query = "UPDATE countries SET countryName='$countryName', totalGold='$totalGold', totalSilver='$totalSilver', totalBronze='$totalBronze', countryImage='$image' WHERE id=$id";
+        } else {
+            echo "<div class='alert alert-danger'>Failed to upload image.</div>";
+        }
+    } else {
+        $query = "UPDATE countries SET countryName='$countryName', totalGold='$totalGold', totalSilver='$totalSilver', totalBronze='$totalBronze' WHERE id=$id";
+    }
 
     if (executeQuery($query)) {
         echo "<div class='alert alert-success'>Country updated successfully!</div>";
@@ -35,7 +51,6 @@ if (isset($_POST['updateCountry'])) {
     }
 }
 
-// Handle form submission for deleting a country
 if (isset($_POST['deleteCountry'])) {
     $id = $_POST['id'];
 
@@ -48,7 +63,6 @@ if (isset($_POST['deleteCountry'])) {
     }
 }
 
-// Fetch countries to display
 $query = "SELECT * FROM countries";
 $result = executeQuery($query);
 ?>
@@ -58,17 +72,16 @@ $result = executeQuery($query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Manage Countries</title>
+    <title>Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container my-5">
-        <h1 class="text-center">Admin Panel - Manage Olympic Countries</h1>
+        <h1 class="text-center">Admin Panel</h1>
 
-        <!-- Add new country form -->
         <div class="mb-4">
             <h2>Add New Country</h2>
-            <form action="admin.php" method="POST">
+            <form action="admin.php" method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
                     <input type="text" name="countryName" class="form-control" placeholder="Country Name" required>
                 </div>
@@ -81,16 +94,18 @@ $result = executeQuery($query);
                 <div class="mb-3">
                     <input type="number" name="totalBronze" class="form-control" placeholder="Bronze Medals" required>
                 </div>
+                <div class="mb-3">
+                    <input type="file" name="countryImage" class="form-control" required>
+                </div>
                 <button type="submit" name="addCountry" class="btn btn-primary">Add Country</button>
             </form>
         </div>
 
         <hr>
 
-        <!-- Update existing country form -->
         <div class="mb-4">
             <h2>Update Country</h2>
-            <form action="admin.php" method="POST">
+            <form action="admin.php" method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
                     <select name="id" class="form-select" required>
                         <option value="">Select Country</option>
@@ -111,13 +126,15 @@ $result = executeQuery($query);
                 <div class="mb-3">
                     <input type="number" name="totalBronze" class="form-control" placeholder="New Bronze Medals" required>
                 </div>
+                <div class="mb-3">
+                    <input type="file" name="countryImage" class="form-control">
+                </div>
                 <button type="submit" name="updateCountry" class="btn btn-success">Update Country</button>
             </form>
         </div>
 
         <hr>
 
-        <!-- Delete country form -->
         <div class="mb-4">
             <h2>Delete Country</h2>
             <form action="admin.php" method="POST">
@@ -125,7 +142,6 @@ $result = executeQuery($query);
                     <select name="id" class="form-select" required>
                         <option value="">Select Country to Delete</option>
                         <?php
-                        // Fetch countries again for the delete dropdown
                         $result = executeQuery($query);
                         while ($row = mysqli_fetch_assoc($result)):
                         ?>
@@ -139,7 +155,6 @@ $result = executeQuery($query);
 
         <hr>
 
-        <!-- Display list of countries -->
         <h2>Countries in the Database</h2>
         <table class="table table-striped">
             <thead>
@@ -148,11 +163,11 @@ $result = executeQuery($query);
                     <th>Gold</th>
                     <th>Silver</th>
                     <th>Bronze</th>
+                    <th>Flag</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                // Fetch and display the countries
                 $result = executeQuery($query);
                 while ($row = mysqli_fetch_assoc($result)):
                 ?>
@@ -161,6 +176,7 @@ $result = executeQuery($query);
                         <td><?= $row['totalGold'] ?></td>
                         <td><?= $row['totalSilver'] ?></td>
                         <td><?= $row['totalBronze'] ?></td>
+                        <td><img src="../images/<?= $row['countryImage'] ?>" alt="Flag" style="width: 50px; height: auto;"></td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
