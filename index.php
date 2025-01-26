@@ -101,14 +101,14 @@ $countries = executeQuery($query);
                     <div class="col-2 lead text-center" style="width: 35px; font-family: OlympicSans;">
                         <?php echo $rank++; ?>
                     </div>
-                    <div class="col-2 lead d-flex align-items-center m-2" style="width: 403px;">
+                    <div class="col-2 d-flex align-items-center m-2" style="width: 403px;">
                         <img src="images/<?php echo $row['countryImage']; ?>" alt="countryFlag" style="width: 101px; height: 53px;">
-                        <p class="p-2 m-0" style="font-family: OlympicSans;"><?php echo $row['countryName']; ?></p>
+                        <p class="lead p-2 m-0" style="font-family: OlympicSans;"><?php echo $row['countryName']; ?></p>
                     </div>
-                    <div class="col-2 lead" style="width: 217px;"><?php echo $row['totalGold']; ?></div>
-                    <div class="col-2 lead" style="width: 215px;"><?php echo $row['totalSilver']; ?></div>
-                    <div class="col-2 lead" style="width: 222px;"><?php echo $row['totalBronze']; ?></div>
-                    <div class="col-2 lead" style="width: 61px;"><?php echo $totalMedals; ?></div>
+                    <div class="col-2" style="width: 217px;"><p class="lead p-2 m-0" style="font-family: OlympicSans"><?php echo $row['totalGold']; ?></p></div>
+                    <div class="col-2" style="width: 215px;"><p class="lead p-2 m-0" style="font-family: OlympicSans"><?php echo $row['totalSilver']; ?></p></div>
+                    <div class="col-2" style="width: 222px;"><p class="lead p-2 m-0" style="font-family: OlympicSans"><?php echo $row['totalBronze']; ?></p></div>
+                    <div class="col-2" style="width: 61px;"><p class="lead p-2 m-0" style="font-family: OlympicSans"><?php echo $totalMedals; ?></p></div>
                 </div>
             </div>
         <?php endwhile; ?>
@@ -132,7 +132,7 @@ $countries = executeQuery($query);
     </div>
 
     <footer class="text-center p-3">
-        <p>&copy; 2025 International Olympic Committee. All rights reserved. Official website of the Olympic Games.</p>
+        <p class="lead" style="font-family: OlympicSans;">&copy; 2025 International Olympic Committee. All rights reserved.</p>
         <img src="images/image 3.png" alt="Logo" class="img-fluid" style="max-height: 50px;">
     </footer>
 
