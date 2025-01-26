@@ -1,75 +1,57 @@
 <?php
 include 'connect.php';
 
-// Add country
-if (isset($_POST['addCountry'])) {
-    $countryName = $_POST['countryName'];
-    $flagUrl = $_POST['flagUrl'];
-
-    $query = "INSERT INTO countries (countryName, flagUrl) VALUES ('$countryName', '$flagUrl')";
-    executeQuery($query);
-}
-
-// Delete country
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    $query = "DELETE FROM countries WHERE id = $id";
-    executeQuery($query);
-}
-
 // Fetch countries
-$countries = executeQuery("SELECT * FROM countries");
+$query = "SELECT * FROM countries";
+$countries = executeQuery($query);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countries</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Countries - Olympic Spirit</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Countries</h1>
+    <header class="bg-dark text-white text-center p-4">
+        <h1>Countries - Olympic Spirit</h1>
         <nav>
-            <ul>
-                <li><a href="index.php">Home</a></li>
-                <li><a href="sports.php">Sports</a></li>
-                <li><a href="events.php">Events</a></li>
-                <li><a href="gallery.php">Gallery</a></li>
+            <ul class="nav justify-content-center">
+                <li class="nav-item"><a class="nav-link text-white" href="index.php">Home</a></li>
             </ul>
         </nav>
     </header>
-    <main>
-        <h2>Manage Countries</h2>
-        <form method="POST">
-            <input type="text" name="countryName" placeholder="Country Name" required>
-            <input type="text" name="flagUrl" placeholder="Flag URL" required>
-            <button type="submit" name="addCountry">Add Country</button>
-        </form>
-        <table>
+
+    <div class="container my-5">
+        <h2>Countries and Their Medals</h2>
+        <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Country Name</th>
-                    <th>Flag</th>
-                    <th>Action</th>
+                    <th>Country</th>
+                    <th>Gold</th>
+                    <th>Silver</th>
+                    <th>Bronze</th>
                 </tr>
             </thead>
             <tbody>
-                <?php while ($row = mysqli_fetch_assoc($countries)) { ?>
+                <?php while ($row = mysqli_fetch_assoc($countries)): ?>
                     <tr>
-                        <td><?= $row['id'] ?></td>
                         <td><?= $row['countryName'] ?></td>
-                        <td><img src="<?= $row['flagUrl'] ?>" alt="Flag" width="50"></td>
-                        <td><a href="?delete=<?= $row['id'] ?>">Delete</a></td>
+                        <td><?= $row['totalGold'] ?></td>
+                        <td><?= $row['totalSilver'] ?></td>
+                        <td><?= $row['totalBronze'] ?></td>
                     </tr>
-                <?php } ?>
+                <?php endwhile; ?>
             </tbody>
         </table>
-    </main>
-    <footer>
-        <p>&copy; 2025 Discover the Olympic Spirit</p>
+    </div>
+
+    <footer class="bg-dark text-white text-center p-3">
+        <p>&copy; 2025 Olympic Spirit</p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

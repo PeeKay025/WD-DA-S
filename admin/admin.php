@@ -1,5 +1,4 @@
 <?php
-// Include the database connection file
 include '../connect.php';
 
 // Handle form submission for adding a new country
@@ -13,9 +12,9 @@ if (isset($_POST['addCountry'])) {
               VALUES ('$countryName', '$totalGold', '$totalSilver', '$totalBronze')";
 
     if (executeQuery($query)) {
-        echo "New country added successfully!";
+        echo "<div class='alert alert-success'>New country added successfully!</div>";
     } else {
-        echo "Error: " . mysqli_error($conn);
+        echo "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";
     }
 }
 
@@ -30,9 +29,9 @@ if (isset($_POST['updateCountry'])) {
     $query = "UPDATE countries SET countryName='$countryName', totalGold='$totalGold', totalSilver='$totalSilver', totalBronze='$totalBronze' WHERE id=$id";
 
     if (executeQuery($query)) {
-        echo "Country updated successfully!";
+        echo "<div class='alert alert-success'>Country updated successfully!</div>";
     } else {
-        echo "Error: " . mysqli_error($conn);
+        echo "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";
     }
 }
 
@@ -43,9 +42,9 @@ if (isset($_POST['deleteCountry'])) {
     $query = "DELETE FROM countries WHERE id=$id";
 
     if (executeQuery($query)) {
-        echo "Country deleted successfully!";
+        echo "<div class='alert alert-success'>Country deleted successfully!</div>";
     } else {
-        echo "Error: " . mysqli_error($conn);
+        echo "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";
     }
 }
 
@@ -59,82 +58,115 @@ $result = executeQuery($query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Olympic Spirit</title>
+    <title>Admin - Manage Countries</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    <div class="container my-5">
+        <h1 class="text-center">Admin Panel - Manage Olympic Countries</h1>
 
-    <h1>Admin Panel - Manage Olympic Countries</h1>
+        <!-- Add new country form -->
+        <div class="mb-4">
+            <h2>Add New Country</h2>
+            <form action="admin.php" method="POST">
+                <div class="mb-3">
+                    <input type="text" name="countryName" class="form-control" placeholder="Country Name" required>
+                </div>
+                <div class="mb-3">
+                    <input type="number" name="totalGold" class="form-control" placeholder="Gold Medals" required>
+                </div>
+                <div class="mb-3">
+                    <input type="number" name="totalSilver" class="form-control" placeholder="Silver Medals" required>
+                </div>
+                <div class="mb-3">
+                    <input type="number" name="totalBronze" class="form-control" placeholder="Bronze Medals" required>
+                </div>
+                <button type="submit" name="addCountry" class="btn btn-primary">Add Country</button>
+            </form>
+        </div>
 
-    <!-- Add new country form -->
-    <h2>Add New Country</h2>
-    <form action="admin.php" method="POST">
-        <input type="text" name="countryName" placeholder="Country Name" required>
-        <input type="number" name="totalGold" placeholder="Gold Medals" required>
-        <input type="number" name="totalSilver" placeholder="Silver Medals" required>
-        <input type="number" name="totalBronze" placeholder="Bronze Medals" required>
-        <button type="submit" name="addCountry">Add Country</button>
-    </form>
+        <hr>
 
-    <hr>
+        <!-- Update existing country form -->
+        <div class="mb-4">
+            <h2>Update Country</h2>
+            <form action="admin.php" method="POST">
+                <div class="mb-3">
+                    <select name="id" class="form-select" required>
+                        <option value="">Select Country</option>
+                        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                            <option value="<?= $row['id'] ?>"><?= $row['countryName'] ?></option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="countryName" class="form-control" placeholder="New Country Name" required>
+                </div>
+                <div class="mb-3">
+                    <input type="number" name="totalGold" class="form-control" placeholder="New Gold Medals" required>
+                </div>
+                <div class="mb-3">
+                    <input type="number" name="totalSilver" class="form-control" placeholder="New Silver Medals" required>
+                </div>
+                <div class="mb-3">
+                    <input type="number" name="totalBronze" class="form-control" placeholder="New Bronze Medals" required>
+                </div>
+                <button type="submit" name="updateCountry" class="btn btn-success">Update Country</button>
+            </form>
+        </div>
 
-    <!-- Update existing country form -->
-    <h2>Update Country</h2>
-    <form action="admin.php" method="POST">
-        <select name="id" required>
-            <option value="">Select Country</option>
-            <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                <option value="<?= $row['id'] ?>"><?= $row['countryName'] ?></option>
-            <?php endwhile; ?>
-        </select>
-        <input type="text" name="countryName" placeholder="New Country Name" required>
-        <input type="number" name="totalGold" placeholder="New Gold Medals" required>
-        <input type="number" name="totalSilver" placeholder="New Silver Medals" required>
-        <input type="number" name="totalBronze" placeholder="New Bronze Medals" required>
-        <button type="submit" name="updateCountry">Update Country</button>
-    </form>
+        <hr>
 
-    <hr>
+        <!-- Delete country form -->
+        <div class="mb-4">
+            <h2>Delete Country</h2>
+            <form action="admin.php" method="POST">
+                <div class="mb-3">
+                    <select name="id" class="form-select" required>
+                        <option value="">Select Country to Delete</option>
+                        <?php
+                        // Fetch countries again for the delete dropdown
+                        $result = executeQuery($query);
+                        while ($row = mysqli_fetch_assoc($result)):
+                        ?>
+                            <option value="<?= $row['id'] ?>"><?= $row['countryName'] ?></option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+                <button type="submit" name="deleteCountry" class="btn btn-danger">Delete Country</button>
+            </form>
+        </div>
 
-    <!-- Delete country form -->
-    <h2>Delete Country</h2>
-    <form action="admin.php" method="POST">
-        <select name="id" required>
-            <option value="">Select Country to Delete</option>
-            <?php
-            // Fetch countries again for the delete dropdown
-            $result = executeQuery($query);
-            while ($row = mysqli_fetch_assoc($result)):
-            ?>
-                <option value="<?= $row['id'] ?>"><?= $row['countryName'] ?></option>
-            <?php endwhile; ?>
-        </select>
-        <button type="submit" name="deleteCountry">Delete Country</button>
-    </form>
+        <hr>
 
-    <hr>
+        <!-- Display list of countries -->
+        <h2>Countries in the Database</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Country</th>
+                    <th>Gold</th>
+                    <th>Silver</th>
+                    <th>Bronze</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Fetch and display the countries
+                $result = executeQuery($query);
+                while ($row = mysqli_fetch_assoc($result)):
+                ?>
+                    <tr>
+                        <td><?= $row['countryName'] ?></td>
+                        <td><?= $row['totalGold'] ?></td>
+                        <td><?= $row['totalSilver'] ?></td>
+                        <td><?= $row['totalBronze'] ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
 
-    <!-- Display list of countries -->
-    <h2>Countries in the Database</h2>
-    <table border="1">
-        <tr>
-            <th>Country</th>
-            <th>Gold</th>
-            <th>Silver</th>
-            <th>Bronze</th>
-        </tr>
-        <?php
-        // Fetch and display the countries
-        $result = executeQuery($query);
-        while ($row = mysqli_fetch_assoc($result)):
-        ?>
-            <tr>
-                <td><?= $row['countryName'] ?></td>
-                <td><?= $row['totalGold'] ?></td>
-                <td><?= $row['totalSilver'] ?></td>
-                <td><?= $row['totalBronze'] ?></td>
-            </tr>
-        <?php endwhile; ?>
-    </table>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

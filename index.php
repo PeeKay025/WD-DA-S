@@ -3,29 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discover the Olympic Spirit</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Olympic Spirit</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Discover the Olympic Spirit</h1>
+    <header class="bg-dark text-white text-center p-4">
+        <h1>Welcome to Olympic Spirit</h1>
         <nav>
-            <ul>
-                <li><a href="sports.php">Sports</a></li>
-                <li><a href="countries.php">Countries</a></li>
-                <li><a href="events.php">Events</a></li>
-                <li><a href="gallery.php">Gallery</a></li>
+            <ul class="nav justify-content-center">
+                <li class="nav-item"><a class="nav-link text-white" href="countries.php">Countries</a></li>
             </ul>
         </nav>
     </header>
-    <main>
-        <section>
-            <h2>About the Olympic Spirit</h2>
-            <p>Discover the values, achievements, and events that define the Olympic spirit.</p>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2025 Discover the Olympic Spirit</p>
+
+    <div class="container my-5">
+        <h2>About the Olympics</h2>
+        <p>The Olympic Games are a celebration of unity, diversity, and the unifying power of sport, bringing together athletes from around the world to compete and showcase their skills. Whether in the summer or winter edition, the Olympic Games offer a stage for incredible performances and thrilling moments that unite nations.</p>
+    </div>
+
+    <footer class="bg-dark text-white text-center p-3">
+        <p>&copy; 2025 Olympic Spirit</p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
